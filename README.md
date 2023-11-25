@@ -57,4 +57,61 @@
         //вывод результата, ToString() - метод StringBuilder для вывода строки
         return result.ToString();
     }
+    
+    /// <summary>
+    /// Выполняет декомпрессию строки
+    /// </summary>
+    /// <param name="str">Входная строка</param>
+    /// <returns>Строка, подвергнутая декомпрессии</returns>
+    /// <exception cref="ArgumentException">Генерируется в случае неверного ввода символов</exception>
+    private static string decompressString(string str)
+    {
+        var result = new StringBuilder();   //нужен для конкатенации символов
+        int i = 1;      //счетчик цикла
+        var count = ""; //количество символов
+        char c = str[0];//текущий символ
 
+        // проверка первого символа
+        if (!((('0' <= c) && (c <= '9')) || (('a' <= c) && (c) <= 'z')))
+        {
+            throw new ArgumentException(string.Format("Неожиданный символ '{0}' в позиции 1", c));
+        }
+
+        //Перебор посимвольно
+        while (i < str.Length)
+        {
+            if (('0' <= str[i]) && (str[i] <= '9')) //если это символ, то записываем
+            {
+                count += str[i];
+            }
+            else if (('a' <= str[i]) && (str[i]) <= 'z')//иначе обнуляем количество и записываем символ count раз
+            {
+                if (count != "")
+                {
+                    result.Append(string.Concat(Enumerable.Repeat<char>(c, int.Parse(count))));
+                    count = "";
+                }
+                else // если символ нужно записать однажды
+                {
+                    result.Append(c);
+                }
+                c = str[i];
+            }
+            // при вводе нелатинской буквы и не прописной буквы генерируется исключение
+            else throw new ArgumentException(string.Format("Неожиданный символ '{0}' в позиции {1}", str[i], i + 1));
+            i++;
+        }
+
+        //обработка последнего символа
+        if (count != "")
+        {
+            result.Append(string.Concat(Enumerable.Repeat<char>(c, int.Parse(count))));
+        }
+        else
+        {
+            result.Append(c);
+        }
+
+        //вывод результата, ToString() - метод StringBuilder для вывода строки
+        return result.ToString();
+    }
