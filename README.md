@@ -4,57 +4,57 @@
 Исходная строка: aaabbcccdde
 Сжатая строка: a3b2c3d2e
 
-`
-/// <summary>
-/// Выполняет компрессию строки
-/// </summary>
-/// <param name="str">Входная строка</param>
-/// <returns>Строка, подвергнутая компрессии</returns>
-/// <exception cref="ArgumentException">Генерируется в случае неверного ввода символов</exception>
-private static string compressString(string str)
-{
-    var result = new StringBuilder();   //нужен для конкатенации символов
-    int i = 0;      //счетчик цикла
-    var count = 0;  //счетчик подряд идущих символов
-    var c = str[0]; //текущий символ
 
-    //Перебор посимвольно
-    while (i < str.Length)
+    /// <summary>
+    /// Выполняет компрессию строки
+    /// </summary>
+    /// <param name="str">Входная строка</param>
+    /// <returns>Строка, подвергнутая компрессии</returns>
+    /// <exception cref="ArgumentException">Генерируется в случае неверного ввода символов</exception>
+    private static string compressString(string str)
     {
-        if (('a' <= str[i]) && (str[i]) <= 'z')
+        var result = new StringBuilder();   //нужен для конкатенации символов
+        int i = 0;      //счетчик цикла
+        var count = 0;  //счетчик подряд идущих символов
+        var c = str[0]; //текущий символ
+    
+        //Перебор посимвольно
+        while (i < str.Length)
         {
-            if (str[i] == c) //если символ совпадает, прибавляем в счетчик
+            if (('a' <= str[i]) && (str[i]) <= 'z')
             {
-                count++;
-            }
-            else //иначе обнуляем счетчик и записываем символ с его количеством
-            {
-                result.Append(c);
-
-                // если символов подряд идущих 2 и более, после символа записываем количество
-                if (count > 1)
+                if (str[i] == c) //если символ совпадает, прибавляем в счетчик
                 {
-                    result.Append(count.ToString());
+                    count++;
                 }
-                count = 1;
-                c = str[i];
+                else //иначе обнуляем счетчик и записываем символ с его количеством
+                {
+                    result.Append(c);
+    
+                    // если символов подряд идущих 2 и более, после символа записываем количество
+                    if (count > 1)
+                    {
+                        result.Append(count.ToString());
+                    }
+                    count = 1;
+                    c = str[i];
+                }
             }
+            // при вводе нелатинской буквы и не прописной буквы генерируется исключение
+            else throw new ArgumentException(string.Format("Неожиданный символ '{0}' в позиции {1}", str[i], i + 1));
+            i++;
         }
-        // при вводе нелатинской буквы и не прописной буквы генерируется исключение
-        else throw new ArgumentException(string.Format("Неожиданный символ '{0}' в позиции {1}", str[i], i + 1));
-        i++;
+    
+        // Запись последнего символа и его количества
+        result.Append(c);
+    
+        // если символов подряд идущих 2 и более, после символа записываем количество
+        if (count > 1)
+        {
+            result.Append(count.ToString());
+        }
+    
+        //вывод результата, ToString() - метод StringBuilder для вывода строки
+        return result.ToString();
     }
 
-    // Запись последнего символа и его количества
-    result.Append(c);
-
-    // если символов подряд идущих 2 и более, после символа записываем количество
-    if (count > 1)
-    {
-        result.Append(count.ToString());
-    }
-
-    //вывод результата, ToString() - метод StringBuilder для вывода строки
-    return result.ToString();
-}
-`
